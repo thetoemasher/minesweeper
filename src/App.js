@@ -36,15 +36,29 @@ class App extends Component {
     }
     for(let i = 0; i < map.length; i++) {
       let row = map[i]
+      // console.log(map[i])
+      // console.log(row)
       for(let f = 0; f < row.length; f++) {
         let points = {
-          t: [i, f]
+          tl: [i - 1, f - 1],
+          tc: [i - 1, f],
+          tr: [i - 1, f + 1],
+          ml: [i, f - 1],
+          mr: [i, f + 1],
+          bl: [i + 1, f - 1],
+          bc: [i + 1, f],
+          br: [i + 1, f + 1],
         }
-        if(row[f] === '8') {
-
+        if(row[f] === '*') {
+          for(let prop in points) {
+            if(map[points[prop][0]] && map[points[prop][0]][points[prop][1]] >= 0){
+              map[points[prop][0]][points[prop][1]]++
+            }
+          }
         }
       }
     }
+    console.log(map)
 
 
     this.setState({mines, map})
@@ -55,6 +69,8 @@ class App extends Component {
     if(map[f][i] === '*') {
       this.setState({dead: true})
       alert('You Done Fucked Up!!!!')
+    } else if(map[f][i] === 0) {
+      
     }
   }
 
@@ -62,14 +78,14 @@ class App extends Component {
     let map = this.state.map.map((r, f) => {
       let row = r.map((c, i) => {
         if(this.state.dead){
-          if(c === 0) {
-            return(
-              <div onClick={() => this.handleClick(f, i)} className='cube' style={{backgroundColor: 'black'}} key={i}></div>
-            )
-          } else if(c === '*') {
+          if(c === '*') {
             return(
               <div className='cube' style={{backgroundColor: 'red'}} key={i}></div>
             )
+          } else {
+              return(
+                <div onClick={() => this.handleClick(f, i)} className='cube' style={{backgroundColor: 'black'}} key={i}></div>
+              )
           }
 
         } else {
